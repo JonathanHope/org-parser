@@ -1,24 +1,35 @@
-document = (header)*
+(* EBNF Grammar for Org documents *)
+(* TODO: Can I pass the priorities and keywords as variables? *)
+(* TODO: Get tags working. *)
 
-(* Header *)
+document = (headline)*
 
-header = header-with-priority-keyword / header-with-priority / header-with-keyword / header-without-keyword-priority
+(* Headline *)
 
-<header-with-priority-keyword> = header-identifier <space> header-priority header-keyword header-content <newline*>
-<header-with-priority> = header-identifier <space> header-priority header-content <newline*>
-<header-with-keyword> = header-identifier <space> header-keyword header-content <newline*>
-<header-without-keyword-priority> = header-identifier <space> header-content <newline*>
+(* Headline - Top Level *)
 
-header-identifier = #'^\*+'
-<header-keyword-regex> = #'(TODO|DONE)'
-header-keyword = header-keyword-regex <space>
-<header-priority-start> = #'\[#'
-<header-priority-regex> = #'(A|B|C)'
-<header-priority-end> = #'\]'
-header-priority = <header-priority-start> header-priority-regex <header-priority-end> <space>
-header-content = chars
+headline = header-with-priority-keyword / headline-with-priority / headline-with-keyword / headline-without-keyword-priority-tags
 
-<chars> = (char)*
-<char> = #'[^\n]+'
+(* Headline - Possible Configurations *)
+
+<header-with-priority-keyword> = headline-identifier <space> headline-priority headline-keyword headline-title <newline*>
+<headline-with-priority> = headline-identifier <space> headline-priority headline-title <newline*>
+<headline-with-keyword> = headline-identifier <space> headline-keyword headline-title <newline*>
+<headline-without-keyword-priority-tags> = headline-identifier <space> headline-title <newline*>
+
+(* Headline - Low Level Elements *)
+
+headline-identifier = #'^\*+'
+headline-keyword = ('TODO'|'DONE') <space>
+headline-priority = <'[#'> ('A'|'B'|'C') <']'> <space>
+headline-title = headline-title-char*
+<headline-title-char> = #'[^\n]'
+
 <space> = #' '
 <newline> = #'\n'
+
+(* <header-tag-content> = #'[A-Za-z0-9_@#%]+' *)
+(* <header-tag-seperator> = ':' *)
+(* header-tag = header-tag-content <header-tag-seperator> *)
+(* header-tags = &(<space> <header-tag-seperator>) header-tag+ *)
+(* header-tags = &' :' header-tag+ *)

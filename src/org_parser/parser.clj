@@ -2,4 +2,11 @@
   (:require [instaparse.core :as insta]
             [clojure.java.io :as io]))
 
-(def parse-org (insta/parser (io/resource "org.bnf")))
+(def org-parser (insta/parser (io/resource "org.bnf")))
+
+(defn parse-org
+  "Parse an org document"
+  [org-doc]
+  (->> (org-parser org-doc)
+       (insta/transform
+        {:headline-title (fn [& args] [:headline-title (apply str args)])})))
