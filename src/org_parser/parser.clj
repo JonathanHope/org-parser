@@ -9,4 +9,5 @@
   [org-doc]
   (->> (org-parser org-doc)
        (insta/transform
-        {:headline-title (fn [& args] [:headline-title (apply str args)])})))
+        {:headline-title (fn [& args] [:headline-title (apply str args)],)
+         :headline-tag (fn [& args] [:headline-tag (apply str args)])})))

@@ -8,13 +8,17 @@ document = (headline)*
 
 (* Headline - Top Level *)
 
-headline = header-with-priority-keyword / headline-with-priority / headline-with-keyword / headline-without-keyword-priority-tags
+headline = headline-with-priority-keyword-tags / headline-with-priority-keyword / headline-with-priority-tags / headline-with-priority / headline-with-keyword-tags / headline-with-keyword / headline-with-tags / headline-without-keyword-priority-tags
 
 (* Headline - Possible Configurations *)
 
-<header-with-priority-keyword> = headline-identifier <space> headline-priority headline-keyword headline-title <newline*>
+<headline-with-priority-keyword-tags> = headline-identifier <space> headline-priority headline-keyword headline-title headline-tags <newline*>
+<headline-with-priority-keyword> = headline-identifier <space> headline-priority headline-keyword headline-title <newline*>
+<headline-with-priority-tags> = headline-identifier <space> headline-priority headline-title headline-tags <newline*>
 <headline-with-priority> = headline-identifier <space> headline-priority headline-title <newline*>
+<headline-with-keyword-tags> = headline-identifier <space> headline-keyword headline-title headline-tags <newline*>
 <headline-with-keyword> = headline-identifier <space> headline-keyword headline-title <newline*>
+<headline-with-tags> = headline-identifier <space> headline-title headline-tags <newline*>
 <headline-without-keyword-priority-tags> = headline-identifier <space> headline-title <newline*>
 
 (* Headline - Low Level Elements *)
@@ -24,12 +28,12 @@ headline-keyword = ('TODO'|'DONE') <space>
 headline-priority = <'[#'> ('A'|'B'|'C') <']'> <space>
 headline-title = headline-title-char*
 <headline-title-char> = #'[^\n]'
+<headline-tag-char> = #'[A-Za-z0-9_@#%]'
+<headline-tag-seperator> = ':'
+headline-tag = headline-tag-char+ <headline-tag-seperator>
+headline-tags = <space> <headline-tag-seperator> headline-tag+
+
+(* Low Level Elements *)
 
 <space> = #' '
 <newline> = #'\n'
-
-(* <header-tag-content> = #'[A-Za-z0-9_@#%]+' *)
-(* <header-tag-seperator> = ':' *)
-(* header-tag = header-tag-content <header-tag-seperator> *)
-(* header-tags = &(<space> <header-tag-seperator>) header-tag+ *)
-(* header-tags = &' :' header-tag+ *)
