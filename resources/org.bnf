@@ -1,39 +1,39 @@
 (* EBNF Grammar for Org documents *)
 (* TODO: Can I pass the priorities and keywords as variables? *)
-(* TODO: Get tags working. *)
 
 document = (headline)*
 
 (* Headline *)
 
-(* Headline - Top Level *)
+(* Headline - Top Level Element *)
 
 headline = headline-with-priority-keyword-tags / headline-with-priority-keyword / headline-with-priority-tags / headline-with-priority / headline-with-keyword-tags / headline-with-keyword / headline-with-tags / headline-without-keyword-priority-tags
 
 (* Headline - Possible Configurations *)
 
-<headline-with-priority-keyword-tags> = headline-identifier <space> headline-priority headline-keyword headline-title headline-tags <newline*>
-<headline-with-priority-keyword> = headline-identifier <space> headline-priority headline-keyword headline-title <newline*>
-<headline-with-priority-tags> = headline-identifier <space> headline-priority headline-title headline-tags <newline*>
-<headline-with-priority> = headline-identifier <space> headline-priority headline-title <newline*>
-<headline-with-keyword-tags> = headline-identifier <space> headline-keyword headline-title headline-tags <newline*>
-<headline-with-keyword> = headline-identifier <space> headline-keyword headline-title <newline*>
-<headline-with-tags> = headline-identifier <space> headline-title headline-tags <newline*>
-<headline-without-keyword-priority-tags> = headline-identifier <space> headline-title <newline*>
+<headline-with-priority-keyword-tags> = headline-identifier <spaces> headline-keyword <spaces> headline-priority <spaces> headline-title <spaces> headline-tags <newline*>
+<headline-with-priority-keyword> = headline-identifier <spaces> headline-keyword <spaces> headline-priority <spaces> headline-title <newline*>
+<headline-with-priority-tags> = headline-identifier <spaces> headline-priority <spaces> headline-title <spaces> headline-tags <newline*>
+<headline-with-priority> = headline-identifier <spaces> headline-priority <spaces> headline-title <newline*>
+<headline-with-keyword-tags> = headline-identifier <spaces> headline-keyword <spaces> headline-title <spaces> headline-tags <newline*>
+<headline-with-keyword> = headline-identifier <spaces> headline-keyword <spaces> headline-title <newline*>
+<headline-with-tags> = headline-identifier <spaces> headline-title <spaces> headline-tags <newline*>
+<headline-without-keyword-priority-tags> = headline-identifier <spaces> headline-title <newline*>
 
 (* Headline - Low Level Elements *)
 
 headline-identifier = #'^\*+'
-headline-keyword = ('TODO'|'DONE') <space>
-headline-priority = <'[#'> ('A'|'B'|'C') <']'> <space>
+headline-keyword = ('TODO'|'DONE')
+<headline-priority-char> = #'[A-Za-z0-9]'
+headline-priority = <'[#'> headline-priority-char <']'>
 headline-title = headline-title-char*
 <headline-title-char> = #'[^\n]'
 <headline-tag-char> = #'[A-Za-z0-9_@#%]'
 <headline-tag-seperator> = ':'
 headline-tag = headline-tag-char+ <headline-tag-seperator>
-headline-tags = <space> <headline-tag-seperator> headline-tag+
+headline-tags = <headline-tag-seperator> headline-tag+
 
 (* Low Level Elements *)
 
-<space> = #' '
+<spaces> = #' +'
 <newline> = #'\n'
