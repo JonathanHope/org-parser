@@ -1,0 +1,24 @@
+document = (header)*
+
+(* Header *)
+
+header = header-with-priority-keyword / header-with-priority / header-with-keyword / header-without-keyword-priority
+
+<header-with-priority-keyword> = header-identifier <space> header-priority header-keyword header-content <newline*>
+<header-with-priority> = header-identifier <space> header-priority header-content <newline*>
+<header-with-keyword> = header-identifier <space> header-keyword header-content <newline*>
+<header-without-keyword-priority> = header-identifier <space> header-content <newline*>
+
+header-identifier = #'^\*+'
+<header-keyword-regex> = #'(TODO|DONE)'
+header-keyword = header-keyword-regex <space>
+<header-priority-start> = #'\[#'
+<header-priority-regex> = #'(A|B|C)'
+<header-priority-end> = #'\]'
+header-priority = <header-priority-start> header-priority-regex <header-priority-end> <space>
+header-content = chars
+
+<chars> = (char)*
+<char> = #'[^\n]+'
+<space> = #' '
+<newline> = #'\n'
