@@ -1,32 +1,36 @@
 (* EBNF Grammar for Org documents *)
 (* TODO: Can I pass the priorities and keywords as variables? *)
+(* TODO: Check for ARCHIVE tag *)
+(* TODO: Check for org-footnote-section title *)
 
-document = (headline)*
+document = section? headline*
 
 (* Headline *)
 
 (* Headline - Top Level Element *)
 
-headline = headline-with-priority-keyword-tags-comment / headline-with-priority-keyword-tags / headline-with-priority-keyword-comment / headline-with-priority-keyword / headline-with-priority-tags-comment / headline-with-priority-tags / headline-with-priority-comment / headline-with-priority / headline-with-keyword-tags-comment / headline-with-keyword-tags / headline-with-keyword-comment / headline-with-keyword / headline-with-tags-comment / headline-with-tags / headline-with-comment / headline-without-keyword-priority-tags-comment
+headline = headline-options section?
+
+<headline-options> = headline-with-priority-keyword-tags-comment / headline-with-priority-keyword-tags / headline-with-priority-keyword-comment / headline-with-priority-keyword / headline-with-priority-tags-comment / headline-with-priority-tags / headline-with-priority-comment / headline-with-priority / headline-with-keyword-tags-comment / headline-with-keyword-tags / headline-with-keyword-comment / headline-with-keyword / headline-with-tags-comment / headline-with-tags / headline-with-comment / headline-without-keyword-priority-tags-comment
 
 (* Headline - Possible Configurations *)
 
-<headline-with-priority-keyword-tags-comment> = headline-identifier <spaces> headline-keyword <spaces> headline-priority <spaces> headline-comment <spaces> headline-title <spaces> headline-tags <newline*>
-<headline-with-priority-keyword-tags> = headline-identifier <spaces> headline-keyword <spaces> headline-priority <spaces> headline-title <spaces> headline-tags <newline*>
-<headline-with-priority-keyword-comment> = headline-identifier <spaces> headline-keyword <spaces> headline-priority <spaces> headline-comment <spaces> headline-title <newline*>
-<headline-with-priority-keyword> = headline-identifier <spaces> headline-keyword <spaces> headline-priority <spaces> headline-title <newline*>
-<headline-with-priority-tags-comment> = headline-identifier <spaces> headline-priority <spaces> headline-comment <spaces> headline-title <spaces> headline-tags <newline*>
-<headline-with-priority-tags> = headline-identifier <spaces> headline-priority <spaces> headline-title <spaces> headline-tags <newline*>
-<headline-with-priority-comment> = headline-identifier <spaces> headline-priority <spaces> headline-comment <spaces> headline-title <newline*>
-<headline-with-priority> = headline-identifier <spaces> headline-priority <spaces> headline-title <newline*>
-<headline-with-keyword-tags-comment> = headline-identifier <spaces> headline-keyword <spaces> headline-comment <spaces> headline-title <spaces> headline-tags <newline*>
-<headline-with-keyword-tags> = headline-identifier <spaces> headline-keyword <spaces> headline-title <spaces> headline-tags <newline*>
-<headline-with-keyword-comment> = headline-identifier <spaces> headline-keyword <spaces> headline-comment <spaces> headline-title <newline*>
-<headline-with-keyword> = headline-identifier <spaces> headline-keyword <spaces> headline-title <newline*>
-<headline-with-tags-comment> = headline-identifier <spaces> headline-comment <spaces>  headline-title <spaces> headline-tags <newline*>
-<headline-with-tags> = headline-identifier <spaces> headline-title <spaces> headline-tags <newline*>
-<headline-with-comment> = headline-identifier <spaces> headline-comment <spaces> headline-title <newline*>
-<headline-without-keyword-priority-tags-comment> = headline-identifier <spaces> headline-title <newline*>
+<headline-with-priority-keyword-tags-comment> = headline-identifier <spaces> headline-keyword <spaces> headline-priority <spaces> headline-comment <spaces> headline-title <spaces> headline-tags <newline-or-end-of-string>
+<headline-with-priority-keyword-tags> = headline-identifier <spaces> headline-keyword <spaces> headline-priority <spaces> headline-title <spaces> headline-tags <newline-or-end-of-string>
+<headline-with-priority-keyword-comment> = headline-identifier <spaces> headline-keyword <spaces> headline-priority <spaces> headline-comment <spaces> headline-title <newline-or-end-of-string>
+<headline-with-priority-keyword> = headline-identifier <spaces> headline-keyword <spaces> headline-priority <spaces> headline-title <newline-or-end-of-string>
+<headline-with-priority-tags-comment> = headline-identifier <spaces> headline-priority <spaces> headline-comment <spaces> headline-title <spaces> headline-tags <newline-or-end-of-string>
+<headline-with-priority-tags> = headline-identifier <spaces> headline-priority <spaces> headline-title <spaces> headline-tags <newline-or-end-of-string>
+<headline-with-priority-comment> = headline-identifier <spaces> headline-priority <spaces> headline-comment <spaces> headline-title <newline-or-end-of-string>
+<headline-with-priority> = headline-identifier <spaces> headline-priority <spaces> headline-title <newline-or-end-of-string>
+<headline-with-keyword-tags-comment> = headline-identifier <spaces> headline-keyword <spaces> headline-comment <spaces> headline-title <spaces> headline-tags <newline-or-end-of-string>
+<headline-with-keyword-tags> = headline-identifier <spaces> headline-keyword <spaces> headline-title <spaces> headline-tags <newline-or-end-of-string>
+<headline-with-keyword-comment> = headline-identifier <spaces> headline-keyword <spaces> headline-comment <spaces> headline-title <newline-or-end-of-string>
+<headline-with-keyword> = headline-identifier <spaces> headline-keyword <spaces> headline-title <newline-or-end-of-string>
+<headline-with-tags-comment> = headline-identifier <spaces> headline-comment <spaces>  headline-title <spaces> headline-tags <newline-or-end-of-string>
+<headline-with-tags> = headline-identifier <spaces> headline-title <spaces> headline-tags <newline-or-end-of-string>
+<headline-with-comment> = headline-identifier <spaces> headline-comment <spaces> headline-title <newline-or-end-of-string>
+<headline-without-keyword-priority-tags-comment> = headline-identifier <spaces> headline-title <newline-or-end-of-string>
 
 (* Headline - Low Level Elements *)
 
@@ -34,15 +38,26 @@ headline-identifier = #'^\*+'
 headline-keyword = ('TODO'|'DONE')
 <headline-priority-char> = #'[A-Za-z0-9]'
 headline-priority = <'[#'> headline-priority-char <']'>
-headline-title = headline-title-char*
-<headline-title-char> = #'[^\n]'
+headline-title = any-but-newline-char*
 headline-comment = <'COMMENT'>
 <headline-tag-char> = #'[A-Za-z0-9_@#%]'
 <headline-tag-seperator> = ':'
 headline-tag = headline-tag-char+ <headline-tag-seperator>
 headline-tags = <headline-tag-seperator> headline-tag+
 
+(* Section *)
+
+section = element+
+<element> = !headline-identifier paragraph <newline-or-end-of-string>
+
+(* Paragraph *)
+
+paragraph = #'.+'
+
 (* Low Level Elements *)
 
 <spaces> = #' +'
+<newline-or-end-of-string> = <newline> | <end-of-string>
 <newline> = #'\n'
+<end-of-string> = #'$'
+<any-but-newline-char> = #'[^\n]'
