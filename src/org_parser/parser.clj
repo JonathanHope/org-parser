@@ -3,7 +3,8 @@
             [clojure.java.io :as io]
             [clojure.zip :as zip]
             [clojure.core.match :refer [match]])
-  (:use [com.rpl.specter]))
+  (:use [com.rpl.specter]
+        [org-parser.macros]))
 
 (defn- is-element?
   "Check if the current location is an element of the given type."
@@ -112,10 +113,10 @@
                (get-next-node-to-move location node-to-move action)
                (get-next-parent-headline-level parent-headline-level parent-headline-level-candidate action))))))
 
-(def org-parser (insta/parser (io/resource "org.bnf")))
+(def- org-parser (insta/parser (io/resource "org.bnf")))
 
 (defn parse-org
-  "Parse an org document"
+  "Parse an org document as a string into a hiccup tree."
   [org-doc]
   (->> (org-parser org-doc)
        (insta/transform

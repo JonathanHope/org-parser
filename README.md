@@ -1,14 +1,9 @@
-# org-parser
+# Org File Parser
 
-A Clojure library designed to ... well, that part is up to you.
-
-## Usage
-
-FIXME
+Parses an org document into a hiccup tree.
 
 ## License
 
-Copyright © 2017 FIXME
+Copyright © 2017 Jonathan Hope
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the MIT License.
