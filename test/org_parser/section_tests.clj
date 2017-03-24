@@ -12,13 +12,11 @@
              (parser/parse-org "* Headline\nsection") =>
              [:document
               [:headline [:headline-identifier "*"] [:headline-title "Headline"]
-               [:section
-                [:paragraph "section"]]]])
+               [:section [:paragraph "section"]]]])
 
        (fact "a section can be between headlines but should be nested in the headline above it"
              (parser/parse-org "* Headline\nsection\n* Headline 2") =>
              [:document
               [:headline [:headline-identifier "*"] [:headline-title "Headline"]
-               [:section
-                [:paragraph "section"]]]
+               [:section [:paragraph "section"]]]
               [:headline [:headline-identifier "*"] [:headline-title "Headline 2"]]]))
