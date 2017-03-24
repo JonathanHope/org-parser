@@ -87,3 +87,27 @@
              [:document [:headline [:headline-identifier "*"] [:headline-title "Test tag:"]]]
              (parser/parse-org "* Test :^:") =>
              [:document [:headline [:headline-identifier "*"] [:headline-title "Test :^:"]]]))
+
+(facts "about sections"
+       (fact "a document can be just a section"
+             (parser/parse-org "section") =>
+             [:document [:section [:paragraph "section"]]])
+
+       (fact "a section can belong to a headline"
+             (parser/parse-org "* Headline
+section") => [:document [:headline [:headline-identifier "*"] [:headline-title "Headline"] [:section [:paragraph "section"]]]])
+
+       (fact "a section can be between headlines but should be nested in the one above it"
+             (parser/parse-org "* Headline
+section
+* Headline 2") => [:document [:headline [:headline-identifier "*"] [:headline-title "Headline"] [:section [:paragraph "section"]]] [:headline [:headline-identifier "*"] [:headline-title "Headline 2"]]]))
+
+(facts "about nesting"
+       (fact "lower level headlines are nested properly"
+             (parser/parse-org "* Headline
+** Headline
+*** Headline") => [:document [:headline [:headline-identifier "*"] [:headline-title "Headline"] [:headline [:headline-identifier "**"] [:headline-title "Headline"] [:headline [:headline-identifier "***"] [:headline-title "Headline"]]]]])
+
+       (fact "headlines of a same or higher level are not nested"
+             (parser/parse-org "* Headline
+* Headline") => [:document [:headline [:headline-identifier "*"] [:headline-title "Headline"]] [:headline [:headline-identifier "*"] [:headline-title "Headline"]]]))

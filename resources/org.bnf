@@ -50,6 +50,8 @@ headline-tags = <headline-tag-seperator> headline-tag+
 section = element+
 <element> = !headline-identifier paragraph <newline-or-end-of-string>
 
+(* Section - Possible Elements *)
+
 (* Paragraph *)
 
 paragraph = #'.+'
